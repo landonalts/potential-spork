@@ -1,8 +1,13 @@
-import { Canvas, useFrame } from '@react-three/fiber'
-import { Physics, useBox, useSphere } from '@react-three/cannon'
+import { Canvas } from '@react-three/fiber'
+import { Physics } from '@react-three/cannon'
 import { Sky, Environment, OrbitControls } from '@react-three/drei'
 import { useEffect, useRef, useState } from 'react'
 import io from 'socket.io-client'
+
+import Player from '../components/Player'
+import Platforms from '../components/Platforms'
+import OtherPlayers from '../components/OtherPlayers'
+import MobileControls from '../components/MobileControls'
 
 export default function OnlyUpGame() {
   const [players, setPlayers] = useState({})
@@ -27,9 +32,7 @@ export default function OnlyUpGame() {
         <Physics gravity={[0, -30, 0]}>
           <Player socket={socketRef.current} />
           <Platforms />
-          {Object.values(players).map(player => (
-            <OtherPlayer key={player.id} data={player} />
-          ))}
+          <OtherPlayers players={players} />
         </Physics>
         
         <OrbitControls
@@ -38,6 +41,7 @@ export default function OnlyUpGame() {
           maxPolarAngle={Math.PI / 2}
           minPolarAngle={Math.PI / 6}
         />
+        <Environment preset="city" />
       </Canvas>
       
       <MobileControls />
